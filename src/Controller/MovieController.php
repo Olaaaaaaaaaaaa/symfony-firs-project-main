@@ -2,6 +2,7 @@
 
 namespace App\Controller;
 
+use Sensio\Bundle\FrameworkExtraBundle\Configuration\IsGranted;
 use App\Entity\Movie;
 use App\Form\MovieType;
 use App\Repository\MovieRepository;
@@ -21,6 +22,7 @@ class MovieController extends AbstractController
         ]);
     }
 
+    #[IsGranted('ROLE_ADMIN')]
     #[Route('/new', name: 'app_movie_new', methods: ['GET', 'POST'])]
     public function new(Request $request, MovieRepository $movieRepository): Response
     {
@@ -48,6 +50,7 @@ class MovieController extends AbstractController
         ]);
     }
 
+    #[IsGranted('ROLE_ADMIN')]
     #[Route('/{id}/edit', name: 'app_movie_edit', methods: ['GET', 'POST'])]
     public function edit(Request $request, Movie $movie, MovieRepository $movieRepository): Response
     {
@@ -66,10 +69,11 @@ class MovieController extends AbstractController
         ]);
     }
 
+    #[IsGranted('ROLE_ADMIN')]
     #[Route('/{id}', name: 'app_movie_delete', methods: ['POST'])]
     public function delete(Request $request, Movie $movie, MovieRepository $movieRepository): Response
     {
-        if ($this->isCsrfTokenValid('delete'.$movie->getId(), $request->request->get('_token'))) {
+        if ($this->isCsrfTokenValid('delete' . $movie->getId(), $request->request->get('_token'))) {
             $movieRepository->remove($movie, true);
         }
 
