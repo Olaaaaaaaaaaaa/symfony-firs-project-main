@@ -1,0 +1,38 @@
+{% extends 'base.html.twig' %}
+{% block stylesheets %}
+    {{ parent() }}
+    {{ encore_entry_link_tags('actor') }}
+{% endblock %}
+
+{% block title %}Actor{% endblock %}
+
+{% block body %}
+    <h1>{{ actor }}</h1>
+
+    <p>There is {{ actor.movies|length }} movie(s) known by our app for this actor </p>
+
+    <table class="table" title="Movies">
+        <caption>Movies</caption>
+        <tbody>
+        {% set i = 1 %}
+        {% for movie in actor.movies %}
+            <tr>
+                <th>Movie n°{{ i }}</th>
+                <td><a href="{{ path('app_movie_show', {
+                        'id': movie.id
+                    }) }}">
+                        {{ movie }}
+                    </a>
+                </td>
+            </tr>
+            {% set i = i + 1 %}
+        {% endfor %}
+        </tbody>
+    </table>
+
+    <a href="{{ path('app_actor_index') }}">back to list</a>
+
+    <a href="{{ path('app_actor_edit', {'id': actor.id}) }}">edit</a>
+
+    {{ include('actor/_delete_form.html.twig') }}
+{% endblock %}
