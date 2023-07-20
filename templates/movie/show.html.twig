@@ -7,7 +7,11 @@
 	<h1 class="text-center">{{ movie }}</h1>
 	<h2 class="text-center">Release Date :
 		{{ movie.releaseDate ? movie.releaseDate|date('d/m/Y') : 'Unknown' }}</h2>
-
+	{% if (movie.imageFileName) == null  %}
+		<img class="rounded mx-auto d-block" src="{{ asset('uploads/images/default-movie.webp') }}" alt="img Film">
+	{% else %}
+		<img class="rounded mx-auto d-block" src="{{ asset('uploads/images/' ~ movie.imageFileName) }}" alt="img Film">
+	{% endif %}
 	<h5 class="text-center">There is
 		{{ movie.actors|length }}
 		actor(s) known by our app in this movie
