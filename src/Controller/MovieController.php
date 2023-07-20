@@ -2,6 +2,7 @@
 
 namespace App\Controller;
 
+use App\Service\FileUploader;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\IsGranted;
 use App\Entity\Movie;
 use App\Form\MovieType;
@@ -24,13 +25,18 @@ class MovieController extends AbstractController
 
     #[IsGranted('ROLE_ADMIN')]
     #[Route('/new', name: 'app_movie_new', methods: ['GET', 'POST'])]
-    public function new(Request $request, MovieRepository $movieRepository): Response
+    public function new(Request $request, MovieRepository $movieRepository, FileUploader $fileUploader): Response
     {
         $movie = new Movie();
         $form = $this->createForm(MovieType::class, $movie);
         $form->handleRequest($request);
 
         if ($form->isSubmitted() && $form->isValid()) {
+            $imageFile = $form->get('image')->getData();
+            if ($imageFile) {
+                $imageFileName = $fileUploader->upload($imageFile);
+                $movie->setImageFilename($imageFileName);
+            }
             $movieRepository->save($movie, true);
 
             return $this->redirectToRoute('app_movie_index', [], Response::HTTP_SEE_OTHER);
