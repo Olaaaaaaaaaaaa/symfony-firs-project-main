@@ -2,6 +2,7 @@
 
 namespace App\Controller;
 
+use Sensio\Bundle\FrameworkExtraBundle\Configuration\IsGranted;
 use App\Entity\Actor;
 use App\Form\ActorType;
 use App\Repository\ActorRepository;
@@ -21,6 +22,7 @@ class ActorController extends AbstractController
         ]);
     }
 
+    #[IsGranted('ROLE_ADMIN')]
     #[Route('/new', name: 'app_actor_new', methods: ['GET', 'POST'])]
     public function new(Request $request, ActorRepository $actorRepository): Response
     {
@@ -29,7 +31,7 @@ class ActorController extends AbstractController
         $form->handleRequest($request);
 
         if ($form->isSubmitted() && $form->isValid()) {
-            foreach ($actor->getMovies() as $movie){
+            foreach ($actor->getMovies() as $movie) {
                 $movie->addActor($actor);
             }
             $actorRepository->save($actor, true);
@@ -51,6 +53,7 @@ class ActorController extends AbstractController
         ]);
     }
 
+    #[IsGranted('ROLE_ADMIN')]
     #[Route('/{id}/edit', name: 'app_actor_edit', methods: ['GET', 'POST'])]
     public function edit(Request $request, Actor $actor, ActorRepository $actorRepository): Response
     {
@@ -58,7 +61,7 @@ class ActorController extends AbstractController
         $form->handleRequest($request);
 
         if ($form->isSubmitted() && $form->isValid()) {
-            foreach ($actor->getMovies() as $movie){
+            foreach ($actor->getMovies() as $movie) {
                 $movie->addActor($actor);
             }
             $actorRepository->save($actor, true);
@@ -72,10 +75,11 @@ class ActorController extends AbstractController
         ]);
     }
 
+    #[IsGranted('ROLE_ADMIN')]
     #[Route('/{id}', name: 'app_actor_delete', methods: ['POST'])]
     public function delete(Request $request, Actor $actor, ActorRepository $actorRepository): Response
     {
-        if ($this->isCsrfTokenValid('delete'.$actor->getId(), $request->request->get('_token'))) {
+        if ($this->isCsrfTokenValid('delete' . $actor->getId(), $request->request->get('_token'))) {
             $actorRepository->remove($actor, true);
         }
 

@@ -25,6 +25,9 @@ class Movie
     #[ORM\ManyToMany(targetEntity: Actor::class, inversedBy: 'movies', cascade: ['persist'])]
     private Collection $actors;
 
+    #[ORM\Column(length: 255, nullable: true)]
+    private ?string $imageFileName = null;
+
     public function __construct()
     {
         $this->actors = new ArrayCollection();
@@ -87,5 +90,17 @@ class Movie
     public function __toString(): string
     {
         return $this->getTitle();
+    }
+
+    public function getImageFileName(): ?string
+    {
+        return $this->imageFileName;
+    }
+
+    public function setImageFileName(?string $imageFileName): static
+    {
+        $this->imageFileName = $imageFileName;
+
+        return $this;
     }
 }
